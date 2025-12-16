@@ -1,0 +1,149 @@
+import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:flutter/material.dart';
+import 'package:vtapp/models/timetable_model.dart';
+import 'package:vtapp/models/timetablecurr_model.dart';
+import 'package:vtapp/parser/timetabledta.dart';
+import 'package:vtapp/parser/timetable_parser.dart';
+import 'package:vtapp/session.dart';
+
+class TimeTable extends StatefulWidget {
+  const TimeTable({super.key});
+
+  @override
+  State<TimeTable> createState() => _TimeTableState();
+}
+
+class _TimeTableState extends State<TimeTable> {
+  bool isLoading = false;
+  bool hasLoadedonce = false;
+  bool semChange = false;
+  String? selectedSem;
+  final datetimecontroller = EasyDatePickerController();
+  late DateTime today;
+  late DateTime start;
+  late DateTime end;
+  late DateTime startofweek;
+  late DateTime endofweek;
+  int? selectedDay;
+
+  Future<void> loadTimetable(semId) async{
+    setState(() {
+      isLoading = true;
+    });
+    if (Session.timetablemodel == null && hasLoadedonce == false){
+    Session.timetablehtml = await PostDataTimeTable().getTimeTable(semId);  
+    Session.timetablemodel = parseVtopTimeTable();
+    hasLoadedonce = true;
+    }
+    else if (semChange == true){
+      Session.timetablehtml = await PostDataTimeTable().getTimeTable(semId);
+      Session.timetablemodel = parseVtopTimeTable();
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+  List<TimetablecurrModel> maptodays(List<TimetableModel>? ttdta,int days){
+    final List<TimetablecurrModel>? subDay = [];
+    final slotsDay = Session.dayToSlots;
+    final slottotime = Session.slotTimes;
+    final day = (Session.daysMapping![days]);
+    for (var subject in ttdta!){
+      for(var slot in subject.slot){
+        if(slotsDay[day]!.contains(slot)){
+        subDay!.add(TimetablecurrModel(courseCode: subject.courseCode, courseName: subject.courseName, slot: subject.slot, facultyDetail: subject.facultyDetail, credits: subject.credits, venue: subject.venue, currentslot: slot, startTime: slottotime[slot]!.$1, endTime: slottotime[slot]!.$2));
+        }
+      }
+    }
+    Session.timetablecurrent = subDay;
+    return subDay!;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    today = DateTime.now();
+    selectedDay = today.weekday;
+    start = today.subtract(Duration(days: today.weekday - DateTime.monday));
+    startofweek = DateTime(start.year,start.month,start.day);
+    end = today.add(Duration(days: DateTime.saturday - today.weekday));
+    endofweek = DateTime(end.year,end.month,end.day);
+    Future.microtask(() async{
+    await loadTimetable(Session.semesterID!.values.first);
+    maptodays(Session.timetablemodel, today.weekday-1);
+    setState(() {
+    });
+    },);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final timetable = Session.timetablemodel;
+    final timetableday = Session.timetablecurrent ?? [];
+    if (timetable == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Column(
+      children: [
+        const SizedBox(height: 4),
+        Text(
+          "Time Table",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 0),
+        DropdownButton<String?>(hint: Text("Choose Semester"),value: selectedSem,items: Session.semesterID?.keys.map((name) {
+          return DropdownMenuItem(child: Text(name),value: name);
+        }).toList(), onChanged: (value) async{
+          setState(() {
+            semChange = true;
+            selectedSem = value;
+          });
+          final semId = Session.semesterID![value]!;
+          await loadTimetable(semId);
+          maptodays(Session.timetablemodel, today.weekday-1);
+          selectedDay = today.weekday;
+          setState(() {
+          });
+        }),
+
+        EasyDateTimeLinePicker(controller: datetimecontroller,timelineOptions: TimelineOptions(height: 100),headerOptions: HeaderOptions(headerType: HeaderType.none),firstDate: startofweek, lastDate: endofweek, focusedDate: today, onDateChange: (date) {
+          datetimecontroller.jumpToDate(date);
+          selectedDay = date.weekday;
+          maptodays(Session.timetablemodel, date.weekday-1);
+          setState(() {
+          });
+        },),
+        Text("Selected Day: ${Session.daysMapping?[selectedDay!-1]}",style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),),
+        Expanded(
+          child: isLoading?
+          CircularProgressIndicator()
+          :
+          ListView.builder(
+            shrinkWrap: false,
+            itemCount: timetableday.length,
+            itemBuilder:(context, index) {
+              TimetablecurrModel item = timetableday[index];
+              return Card(
+                elevation: 3,
+                margin: const EdgeInsets.all(15),
+                child: ListTile(
+                  title: Text("${item.courseCode} - ${item.courseName } (${item.venue})\n(${item.currentslot})",style: TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontWeight: FontWeight.bold
+                  ),),
+                  subtitle: Text("Credits:${item.credits}\nSlots:${item.slot.join("+")}\nStart Time:${item.startTime}\nEnd Time:${item.endTime}\nFaculty: ${item.facultyDetail}",style: TextStyle(
+                    overflow: TextOverflow.ellipsis
+                  ),),
+                ),
+              );
+            },),
+        )
+      ],
+    );
+  }
+}

@@ -1,0 +1,43 @@
+name: vtapp
+description: "Mobile version for VTOP Bhopal."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  cloud_firestore: ^6.1.0
+  cookie_jar: ^4.0.8
+  dio: ^5.9.0
+  dio_cookie_manager: ^3.3.0
+  easy_date_timeline: ^2.0.9
+  firebase_core: ^4.2.1
+  flutter:
+    sdk: flutter
+  flutter_glass_morphism: ^1.0.2
+  flutter_html: ^3.0.0
+  flutter_inappwebview: ^6.1.5
+  flutter_js: ^0.8.5
+  flutter_neumorphic_plus: ^3.5.0
+  flutter_widget_from_html: ^0.17.1
+  flutter_widget_from_html_core: ^0.17.0
+  html: ^0.15.6
+  http: ^1.6.0
+  intl: ^0.20.2
+  percent_indicator: ^4.2.5
+  shadcn_ui: ^0.40.2
+  styled_widget: ^0.4.1
+  tiny_alert: ^1.1.1
+  webview_flutter: ^4.13.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/loginpage.jpeg
+
