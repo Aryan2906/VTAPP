@@ -53,5 +53,5 @@ ios/Flutter/ephemeral/
 *.env
 google-services.json
 firebase_options.dart
-firebase.dart
+firebase.json
 ios/Runner/GoogleService-Info.plist
