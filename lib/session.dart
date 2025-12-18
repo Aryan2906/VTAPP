@@ -24,7 +24,7 @@ class Session {
   static CookieJar? cookieJar;
   static GpaModel? GPAinfo;
   static List<AttendanceModel>? attinfo;
-  static Map<String,dynamic>? semesterID;
+  static Map<String,String> semesterID = {};
   static List<CourseMark>? marksInfo;
   static String? marksmodel;
   static String? timetablehtml = " ";

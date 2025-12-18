@@ -47,9 +47,13 @@ Future<void> testResponse(Dio dio) async{
   Future<void> getSemesters() async{
     final getSem = await FirestoreService.semesters.collection("semesters").doc("semesterid").get();
     final data = getSem.data();
-    Session.semesterID = data;
-    print(data);
-  }
+    List<String?>? sorted_sem =  data?.values.cast<String>().toList();
+    sorted_sem?.sort();
+    sorted_sem = sorted_sem?.reversed.toList();
+    for(var v in sorted_sem!){
+      Session.semesterID.addAll({data!.entries.firstWhere((e) => e.value == v).key : v!});
+    }
+  } 
 
   String? _base64;
 

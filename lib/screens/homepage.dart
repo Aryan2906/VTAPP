@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vtapp/bottom_nav/academics.dart';
 import 'package:vtapp/bottom_nav/dashboard.dart';
 import 'package:vtapp/bottom_nav/timetable.dart';
+import 'package:vtapp/screens/notices.dart';
 import 'package:vtapp/session.dart';
 import 'package:vtapp/widgets/logout.dart';
 
@@ -36,6 +37,7 @@ class _HomepageState extends State<Homepage> {
           color: Colors.white,
         ),),
         backgroundColor: Colors.purple,
+        // leading: IconButton(onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => notifications()));}, icon: Icon(Icons.notifications,color: Colors.white,)),
         actions: [LogoutBtn()],
       ),
       body:Center(
