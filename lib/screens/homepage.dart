@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:vtapp/bottom_nav/academics.dart';
 import 'package:vtapp/bottom_nav/dashboard.dart';
 import 'package:vtapp/bottom_nav/timetable.dart';
+import 'package:vtapp/drawer/drawer.dart';
 import 'package:vtapp/screens/notices.dart';
+import 'package:vtapp/services/updateService.dart';
 import 'package:vtapp/session.dart';
 import 'package:vtapp/widgets/logout.dart';
 
@@ -26,10 +28,19 @@ class _HomepageState extends State<Homepage> {
       selectedIndex = index;
     });
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ForceUpdateService.check(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Mydrawer(),
       appBar: AppBar(
+        foregroundColor: Colors.white,
         surfaceTintColor: Colors.purple,
         centerTitle: true,
         title: Text("Welcome ${Session.regNo}",style: TextStyle(

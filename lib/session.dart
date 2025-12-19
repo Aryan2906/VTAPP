@@ -102,5 +102,17 @@ static Map<String, List<String>> dayToSlots = {
 static List<String>? daysMapping = ["MON","TUE","WED","THU","FRI","SAT"];
 static List<TimetablecurrModel>? timetablecurrent;
 
-
+static void Clear(){
+  regNo = "";
+  gpamodel = null;
+  attmodel = null;
+  authorizedID = null;
+  examVenueModel = null;
+  marksInfo = null;
+  subjects = null;
+  timetablemodel = null;
+  password = null;
+  gradesHtml = null;
+  
+}
  }
