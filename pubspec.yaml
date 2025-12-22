@@ -1,7 +1,7 @@
 name: vtapp
 description: "Mobile version for VTOP Bhopal."
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.1.0+4
 
 environment:
   sdk: ^3.9.2
@@ -33,6 +33,7 @@ dependencies:
   styled_widget: ^0.4.1
   timezone: ^0.10.1
   tiny_alert: ^1.1.1
+  url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
 
 dev_dependencies:

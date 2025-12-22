@@ -48,21 +48,9 @@ class _AttendanceWidState extends State<AttendanceWid> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Expanded(
-      // width: MediaQuery.of(context).size.width * 0.95,
-      // height:MediaQuery.of(context).size.width * 1,
-      // margin: EdgeInsets.only(
-      //   left: MediaQuery.of(context).size.width * 0.025,
-      //   top: 15,
-        
-      // ),
-      child:Column(
+    return Column(
         children: [
           const SizedBox(height: 10),
-          Text(
-            "Attendance",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
           const SizedBox(height: 10),
           DropdownButton<String?>(hint: Text("Choose Semester"),value: selectedSem,items: Session.semesterID?.keys.map((name) {
             return DropdownMenuItem(child: Text(name),value: name);
@@ -109,7 +97,6 @@ class _AttendanceWidState extends State<AttendanceWid> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

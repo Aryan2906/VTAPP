@@ -69,9 +69,12 @@ class _TimeTableState extends State<TimeTable> {
     startofweek = DateTime(start.year,start.month,start.day);
     end = today.add(Duration(days: DateTime.saturday - today.weekday));
     endofweek = DateTime(end.year,end.month,end.day);
+    if (selectedDay == 7){
+          selectedDay = 1;
+      }
     Future.microtask(() async{
     await loadTimetable(Session.semesterID!.values.first);
-    maptodays(Session.timetablemodel, today.weekday-1);
+    maptodays(Session.timetablemodel, selectedDay!-1);
     setState(() {
     });
     },);
@@ -88,10 +91,6 @@ class _TimeTableState extends State<TimeTable> {
     return Column(
       children: [
         const SizedBox(height: 4),
-        Text(
-          "Time Table",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
         const SizedBox(height: 0),
         DropdownButton<String?>(hint: Text("Choose Semester"),value: selectedSem,items: Session.semesterID?.keys.map((name) {
           return DropdownMenuItem(child: Text(name),value: name);
@@ -103,6 +102,9 @@ class _TimeTableState extends State<TimeTable> {
           final semId = Session.semesterID![value]!;
           await loadTimetable(semId);
           maptodays(Session.timetablemodel, today.weekday-1);
+          if (selectedDay == 7){
+            selectedDay = 1;
+          }
           selectedDay = today.weekday;
           setState(() {
           });
@@ -111,6 +113,9 @@ class _TimeTableState extends State<TimeTable> {
         EasyDateTimeLinePicker(controller: datetimecontroller,timelineOptions: TimelineOptions(height: 100),headerOptions: HeaderOptions(headerType: HeaderType.none),firstDate: startofweek, lastDate: endofweek, focusedDate: today, onDateChange: (date) {
           datetimecontroller.jumpToDate(date);
           selectedDay = date.weekday;
+          if (selectedDay == 7){
+            selectedDay = 1;
+          }
           maptodays(Session.timetablemodel, date.weekday-1);
           setState(() {
           });

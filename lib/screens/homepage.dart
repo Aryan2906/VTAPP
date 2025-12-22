@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:vtapp/bottom_nav/academics.dart';
-import 'package:vtapp/bottom_nav/dashboard.dart';
+import 'package:vtapp/bottom_nav/attendancewid.dart';
 import 'package:vtapp/bottom_nav/timetable.dart';
 import 'package:vtapp/drawer/drawer.dart';
 import 'package:vtapp/screens/notices.dart';
 import 'package:vtapp/services/updateService.dart';
 import 'package:vtapp/session.dart';
 import 'package:vtapp/widgets/logout.dart';
+import 'package:vtapp/widgets/spotlight.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -16,18 +16,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
-    Dashboard(),
-    AcademicsWid(),
-    TimeTableWid(),
-  ];
-  
-  void _onTappeditem(int index){
-    setState(() {
-      selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
@@ -52,15 +40,8 @@ class _HomepageState extends State<Homepage> {
         actions: [LogoutBtn()],
       ),
       body:Center(
-          child:_widgetOptions.elementAt(selectedIndex)
+          child: SpotlightWid(),
         ),
-        bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard),label: "Dashboard"),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book_sharp),label: "Academics"),
-          BottomNavigationBarItem(icon: Icon(Icons.timer),label: "Time Table")
-        ],currentIndex: selectedIndex,
-        selectedItemColor: Colors.purple,
-        onTap: _onTappeditem),
       );
   }
 }

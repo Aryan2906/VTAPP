@@ -29,7 +29,7 @@ class ForceUpdateService {
       BuildContext context, String url) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: false,  
       builder: (_) => AlertDialog(
         title: const Text("Update Required"),
         content: const Text(

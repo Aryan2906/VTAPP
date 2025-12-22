@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:vtapp/bottom_nav/academics.dart';
+import 'package:vtapp/bottom_nav/attendancewid.dart';
+import 'package:vtapp/bottom_nav/timetable.dart';
 import 'package:vtapp/screens/aboutme.dart';
+import 'package:vtapp/screens/homepage.dart';
+import 'package:vtapp/widgets/attendance.dart';
+import 'package:vtapp/widgets/timetable.dart';
 
 class Mydrawer extends StatelessWidget {
   const Mydrawer({super.key});
@@ -24,6 +30,118 @@ class Mydrawer extends StatelessWidget {
               fontWeight: FontWeight.bold
             ),),
             const Divider(),
+            TextButton(onPressed: (){
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (_, __, ___) => const Homepage(),
+                transitionsBuilder: (_, animation, __, child) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  );
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ),
+            );
+
+            }, child: Text("Dashboard",style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),)),
+            TextButton(onPressed: () {
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (_, __, ___) => const Attendance(),
+                transitionsBuilder: (_, animation, __, child) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  );
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ),
+            );
+
+            }, child: Text("Attendance",style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),)),
+            TextButton(onPressed: (){
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (_, __, ___) => const AcademicsWid(),
+                transitionsBuilder: (_, animation, __, child) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  );
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ),
+            );
+
+            }, child: Text("Academics" ,style: TextStyle(
+              fontWeight: FontWeight.bold
+            ),)),
+            TextButton(onPressed: (){
+              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (_, __, ___) => const TimeTableWid(),
+                transitionsBuilder: (_, animation, __, child) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  );
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ),
+            );
+
+            }, child: Text("Time Table" ,style: TextStyle(
+              fontWeight: FontWeight.bold
+            ),)),
             // ListTile(
             //   leading: const Icon(Icons.question_answer),
             //   title: Text("About Me",style: TextStyle(
@@ -34,11 +152,6 @@ class Mydrawer extends StatelessWidget {
             //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Aboutme()));
             //   },
             // ),
-            const Spacer(),
-            Text("Coming Soon",style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-            ),),
             const Spacer(),
           FutureBuilder<String>(
             future: _getversion(),

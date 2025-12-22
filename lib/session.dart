@@ -6,6 +6,7 @@ import 'package:vtapp/models/exam_schedule_model.dart';
 import 'package:vtapp/models/gpa_model.dart';
 import 'package:vtapp/models/grades_model.dart';
 import 'package:vtapp/models/marks_model.dart';
+import 'package:vtapp/models/spotlight_model.dart';
 import 'package:vtapp/models/timetable_model.dart';
 import 'package:vtapp/models/timetablecurr_model.dart';
 
@@ -34,6 +35,8 @@ class Session {
   static List<TimetableModel>? timetablemodel;
   static String? examVenueHtml;
   static List<ExamGroup>? examVenueModel;
+  static List<SpotlightItem>? spotlightItem;
+  static String? spotlighthtml;
   static Map<String, (String start, String end)> slotTimes = {
   // Morning A/D series
   "A11": ("08:30", "10:00"),
