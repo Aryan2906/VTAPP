@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:vtapp/models/timetable_model.dart';
 import 'package:vtapp/models/timetablecurr_model.dart';
 import 'package:vtapp/parser/timetabledta.dart';
 import 'package:vtapp/parser/timetable_parser.dart';
+import 'package:vtapp/services/notifService.dart';
 import 'package:vtapp/session.dart';
 
 class TimeTable extends StatefulWidget {
@@ -25,6 +28,40 @@ class _TimeTableState extends State<TimeTable> {
   late DateTime startofweek;
   late DateTime endofweek;
   int? selectedDay;
+  late String currtime;
+
+  bool highlighTime(String? slotTimeStart,String currtime,String? slotTimeEnd){
+    final slotEndHours = num.parse(slotTimeEnd!.split(":")[0]);
+    final slotEndmins = num.parse(slotTimeEnd.split(":")[1]);
+    final currhours = num.parse(currtime.split(":")[0]);
+    final currmins = num.parse(currtime.split(":")[1]);
+    final slotHours = num.parse(slotTimeStart!.split(":")[0]);
+    final slotmins = num.parse(slotTimeStart.split(":")[1]);
+    print("${currhours}  , ${slotHours}, ${slotEndHours} ");
+    if (currhours > slotHours){
+      return false;
+    }
+    else if (currhours >= slotHours && currhours < slotEndHours){
+      return true;
+    }
+    else{
+      return false;
+    }
+    return false;
+  }
+
+  bool sendNotif(String? slotTimeStart,String currtime,String? slotTimeEnd){
+    final slotEndHours = num.parse(slotTimeEnd!.split(":")[0]);
+    final slotEndmins = num.parse(slotTimeEnd.split(":")[1]);
+    final currhours = num.parse(currtime.split(":")[0]);
+    final currmins = num.parse(currtime.split(":")[1]);
+    final slotHours = num.parse(slotTimeStart!.split(":")[0]);
+    final slotmins = num.parse(slotTimeStart.split(":")[1]);
+    if(currhours == slotHours && currmins - slotmins <= 10){
+      return true;
+    }
+    return false;
+  }
 
   Future<void> loadTimetable(semId) async{
     setState(() {
@@ -64,6 +101,8 @@ class _TimeTableState extends State<TimeTable> {
   void initState() {
     super.initState();
     today = DateTime.now();
+    currtime = "${today.hour}:${today.minute}";
+    print(currtime);
     selectedDay = today.weekday;
     start = today.subtract(Duration(days: today.weekday - DateTime.monday));
     startofweek = DateTime(start.year,start.month,start.day);
@@ -133,10 +172,22 @@ class _TimeTableState extends State<TimeTable> {
             itemCount: timetableday.length,
             itemBuilder:(context, index) {
               TimetablecurrModel item = timetableday[index];
+              final highlight = highlighTime(item.startTime, currtime, item.endTime);
+              // print(item.startTime);
+              // print("${item.currentslot} : ${highlight}");
+              // print("${currtime}");
+              if (sendNotif(item.startTime, currtime, item.endTime)){
+                NotifService().showNotif(
+                  body: "Subject: ${item.courseName} , Start Time: ${item.startTime}",
+                  title: "Next Class @ ${item.venue}"
+                );
+              }
               return Card(
                 elevation: 3,
                 margin: const EdgeInsets.all(15),
+                color: highlight? Colors.purple : Colors.white,
                 child: ListTile(
+                  textColor: highlight?  Colors.white : Colors.black,
                   title: Text("${item.courseCode} - ${item.courseName } (${item.venue})\n(${item.currentslot})",style: TextStyle(
                     overflow: TextOverflow.clip,
                     fontWeight: FontWeight.bold
